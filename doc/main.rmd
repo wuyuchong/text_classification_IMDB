@@ -19,7 +19,7 @@ logo: "cufe.jpg"
 ---
 
 ```{r setup, include=FALSE, message=FALSE}
-knitr::opts_chunk$set(fig.pos = 'H', echo = TRUE, warning = FALSE, message = FALSE, comment = NA)
+knitr::opts_chunk$set(fig.pos = 'H', echo = FALSE, warning = FALSE, message = FALSE, comment = NA)
 library(rmarkdown)
 library(knitr)
 library(tidyverse)
@@ -33,7 +33,7 @@ library(dplyr)
 
 # 摘要
 
-我们使用 IMDB 数据集进行文本分类。我们使用主题模型进行文本挖掘，之后进行情感分类。在文本预处理阶段，我们尝试使用词编码和词向量的方式，在训练阶段，我们构建了 DNN、LSTM、BERT 等多个深度学习模型进行训练，并进行了模型比较，最终达到了 90% 的准确率。最后，为了进一步实现在超大文本集上进行训练，我们使用基于 Spark 的分布式算法在集群服务器上进行训练测试。
+我们使用 IMDB 数据集进行文本分类。我们使用主题模型进行文本挖掘，之后进行情感分类。在文本预处理阶段，我们尝试使用词编码和词向量的方式，在训练阶段，我们构建了 DNN、LSTM、BERT 等多个深度学习模型进行训练，并进行了模型比较，最终达到了 90% 的准确率。最后，为了进一步实现在超大文本集上进行训练，我们使用基于 Spark 的分布式算法在集群服务器上进行训练测试。^[分布式模型在该小型数据集上没有优势，进行此项的意义在于对大型文本数据集可拓展性的技术储备，仅有在文本量级超过单机可承载上限时，分布式计算才具备意义]
 
 | 模型         | 计算配置    | 用时   | 准确率 | 可拓展性 |
 | ------------ | ----------- | ------ | ------ | -------- |
@@ -44,7 +44,6 @@ library(dplyr)
 | bert - 标准      |阿里云服务器 Xeon 8 核 CPU 32G 内存| 3  小时 | 92% | 低-单机 |
 | spark            |中央财经大学大数据高性能分布式集群 | -- 分钟 | --% | 高-集群 |
 
-> 分布式模型在该小型数据集上没有优势，进行此项的意义在于对大型文本数据集可拓展性的技术储备，仅有在文本量级超过单机可承载上限时，分布式计算才具备意义
 
 # 数据集介绍
 
@@ -104,11 +103,11 @@ IMDB 是一个隶属于亚马逊公司旗下的世界著名互联网电影资料
 
 （5）	Rocchio算法
 
-该算法使用训练语料来为每个类别构造一个质心向量，通过计算待分类文档与质心向量的相似性来划分类别，相似性的度量通常采用夹角余弦、向量内积、欧式距离等。它的算法简单，易于实现与理解，训练与分类的效率很高。但容易受样本分布影响，且构造的质心向量可能会落在所属的类别之外。1][2]
+该算法使用训练语料来为每个类别构造一个质心向量，通过计算待分类文档与质心向量的相似性来划分类别，相似性的度量通常采用夹角余弦、向量内积、欧式距离等。它的算法简单，易于实现与理解，训练与分类的效率很高。但容易受样本分布影响，且构造的质心向量可能会落在所属的类别之外。
 
 （6）	深度学习分类算法
 
-与以上传统的文本分类算法相比，深度学习作为机器学习的重要分支，可以通过多层语义操作，得到更加抽象、层级更多的语义特征。它的优势还包括能够在模型的建立过程中融入特征提取工作，使得人为设计特征导致的不完备性与冗余得到减少。常用于文本分类的深度学习算法主要有：卷积神经网络（CNN）、循环神经网络（RNN）、注意力机制（Attention Mechanism）等及以上算法的一些结合。[3]
+与以上传统的文本分类算法相比，深度学习作为机器学习的重要分支，可以通过多层语义操作，得到更加抽象、层级更多的语义特征。它的优势还包括能够在模型的建立过程中融入特征提取工作，使得人为设计特征导致的不完备性与冗余得到减少。常用于文本分类的深度学习算法主要有：卷积神经网络（CNN）、循环神经网络（RNN）、注意力机制（Attention Mechanism）等及以上算法的一些结合。
 
 ### 主题模型
 
@@ -123,6 +122,8 @@ IMDB 是一个隶属于亚马逊公司旗下的世界著名互联网电影资料
 ## 文本预处理
 
 # 主题挖掘
+
+待补充
 
 # 深度学习
 
@@ -141,8 +142,6 @@ IMDB 是一个隶属于亚马逊公司旗下的世界著名互联网电影资料
     * 当 batch size 过大时，一方面容易出现内存紧缺，另一方面模型的泛化能力会变差
 
 ## Tokenize + DNN
-
-### 文本预处理
 
 ### DNN 模型结构
 
@@ -268,12 +267,6 @@ Adam 的超收敛性质使其在训练学习率高的神经网络时可以达到
 
 我们使用 `pyspark` 进行分布式训练。
 
----
-
-对分布式的解释
-
----
-
 ## 环境启动
 
 * 通过 YARN 资源调度系统提交到作业队列： `spark-submit --master yarn`
@@ -354,59 +347,10 @@ CountVectorizer旨在帮助将文本文档集合转换为令牌计数向量。�
 
 Word2Vec是 a Estimator，它采用表示文档的单词序列并训练 a Word2VecModel。该模型将每个单词映射到一个唯一的固定大小向量。使用Word2VecModel 文档中所有单词的平均值将每个文档转换为向量；然后，此向量可用作预测、文档相似度计算等的特征。
 
-+--------------------+---------+--------------------+-----+--------------------+--------------------+--------------------+
-|              review|sentiment|          clean_text|label|              tokens|     filtered_tokens|  vectorizedFeatures|
-+--------------------+---------+--------------------+-----+--------------------+--------------------+--------------------+
-|" Så som i himmel...| positive|som himmelen spec...|  1.0|[som, himmelen, s...|[som, himmelen, s...|[-0.0342070295865...|
-|"A Thief in the N...| positive|thief night film ...|  1.0|[thief, night, fi...|[thief, night, fi...|[-0.0408242154261...|
-|"A bored televisi...| negative|bore televis dire...|  0.0|[bore, televis, d...|[bore, televis, d...|[-0.0027961347296...|
-|"A death at a col...| negative|death colleg camp...|  0.0|[death, colleg, c...|[death, colleg, c...|[0.05449881133376...|
-|"A wrong-doer is ...| positive|wrong doer man le...|  1.0|[wrong, doer, man...|[wrong, doer, man...|[-0.0372324095555...|
-|"ASTONISHING" Scr...| negative|astonish scream t...|  0.0|[astonish, scream...|[astonish, scream...|[-0.0318759428855...|
-|"Ah Ritchie's mad...| positive|ritchi gangster f...|  1.0|[ritchi, gangster...|[ritchi, gangster...|[-0.0107584181500...|
-|"All men are guil...| positive|men guilti sai ch...|  1.0|[men, guilti, sai...|[men, guilti, sai...|[-0.0178894277019...|
-|"Ally McBeal" was...| negative|alli mcbeal decen...|  0.0|[alli, mcbeal, de...|[alli, mcbeal, de...|[0.03022302206801...|
-|"American Nightma...| negative|american nightmar...|  0.0|[american, nightm...|[american, nightm...|[-0.0203444369737...|
-|"And the time cam...| positive|time came risk re...|  1.0|[time, came, risk...|[time, came, risk...|[-0.0094662440743...|
-|"Bell Book and Ca...| positive|bell book candl s...|  1.0|[bell, book, cand...|[bell, book, cand...|[0.01776887786126...|
-|"Bye Bye Birdie" ...| positive|bye bye birdi isn...|  1.0|[bye, bye, birdi,...|[bye, bye, birdi,...|[0.05504141661157...|
-|"Checking Out" is...| positive|check witti hones...|  1.0|[check, witti, ho...|[check, witti, ho...|[0.04385661325432...|
-|"Cinderella" is o...| positive|cinderella belov ...|  1.0|[cinderella, belo...|[cinderella, belo...|[-0.0011522050168...|
-|"Coconut Fred's F...| positive|coconut fred frui...|  1.0|[coconut, fred, f...|[coconut, fred, f...|[-0.0251961564416...|
-|"Crossfire" is a ...| positive|crossfir justifi ...|  1.0|[crossfir, justif...|[crossfir, justif...|[0.09186474620022...|
-|"Crossfire" is os...| positive|crossfir ostens m...|  1.0|[crossfir, ostens...|[crossfir, ostens...|[0.05601690868159...|
-|"Crossfire" is re...| positive|crossfir rememb f...|  1.0|[crossfir, rememb...|[crossfir, rememb...|[0.07200618214495...|
-|"Cut" is a full-t...| positive|cut tilt spoof sl...|  1.0|[cut, tilt, spoof...|[cut, tilt, spoof...|[0.06616966947829...|
-+--------------------+---------+--------------------+-----+--------------------+--------------------+--------------------+
 
 ## 训练模型
 
 我们首先使用简单的 logistic 模型进行拟合，在训练集上进行拟合，之后在测试集上验证模型的效果。
-
-+-----+----------+
-|label|prediction|
-+-----+----------+
-|  0.0|       0.0|
-|  0.0|       0.0|
-|  1.0|       1.0|
-|  1.0|       1.0|
-|  0.0|       0.0|
-|  1.0|       1.0|
-|  0.0|       0.0|
-|  0.0|       0.0|
-|  1.0|       1.0|
-|  0.0|       0.0|
-|  0.0|       0.0|
-|  0.0|       0.0|
-|  1.0|       1.0|
-|  1.0|       1.0|
-|  1.0|       1.0|
-|  1.0|       1.0|
-|  0.0|       0.0|
-|  0.0|       0.0|
-|  1.0|       1.0|
-|  1.0|       1.0|
-+-----+----------+
 
 ## 模型预测
 
@@ -416,13 +360,6 @@ Word2Vec是 a Estimator，它采用表示文档的单词序列并训练 a Word2V
 2. 它很差劲
 
 模型对前一个句子的分类结果为积极，对一个句子的分类结果为消极。
-
-+-----------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+
-|       clean_text|              tokens|     filtered_tokens|  vectorizedFeatures|       rawPrediction|         probability|prediction|
-+-----------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+
-|I like this movie|[i, like, this, m...|[i, like, this, m...|(61505,[2,11578,4...|[-15.575416022470...|[1.72061099333001...|       1.0|
-|     It is so bad|   [it, is, so, bad]|   [it, is, so, bad]|(61505,[11,15663,...|[4.04521599411133...|[0.98279526175309...|       0.0|
-+-----------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+
 
 ## 模型比较
 
@@ -441,9 +378,12 @@ Word2Vec是 a Estimator，它采用表示文档的单词序列并训练 a Word2V
 
 [3]贾澎涛,孙炜.基于深度学习的文本分类综述[J].计算机与现代化,2021(07):29-37.[
 
-
 [1]王博,刘盛博,丁堃,刘则渊.基于LDA主题模型的专利内容分析方法[J].科研管理,2015,36(03):111-117.DOI:10.19571/j.cnki.1000-2995.2015.03.014.
+
 [2]关鹏,王曰芬,傅柱.不同语料下基于LDA主题模型的科学文献主题抽取效果分析[J].图书情报工作,2016,60(02):112-121.DOI:10.13266/j.issn.0252-3116.2016.02.018.
+
 [3]黄佳佳,李鹏伟,彭敏,谢倩倩,徐超.基于深度学习的主题模型研究[J].计算机学报,2020,43(05):827-855.
+
 [4]胡吉明,陈果.基于动态LDA主题模型的内容主题挖掘与演化[J].图书情报工作,2014,58(02):138-142.DOI:10.13266/j.issn.0252-3116.2014.02.023.
+
 [5]陈晓美,高铖,关心惠.网络舆情观点提取的LDA主题模型方法[J].图书情报工作,2015,59(21):21-26.DOI:10.13266/j.issn.0252-3116.2015.21.003.

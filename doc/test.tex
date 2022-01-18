@@ -1,0 +1,150 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  hyperref,]{ctexart}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{indentfirst}
+\setlength{\parindent}{4em}
+
+\author{}
+\date{}
+
+\setCJKmainfont[BoldFont=SimHei,ItalicFont=STKaiti]{SimSun}
+
+\begin{document}
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Central University of Finance and Economics}\\[1.5cm] % Name of your university/college
+\includegraphics[scale=1]{cufe.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+\textsc{\Large 中央财经大学}\\[0.5cm] % Major heading such as course name
+\textsc{\Large 大数据分析计算机基础课程}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries 电影评论情感分析}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{center} \large
+\textsc{\large 吴宇翀}\\[0.5cm] % Minor heading such as course title
+\textsc{\large 谢一鸣}\\[0.5cm] % Minor heading such as course title
+\textsc{\large 吴舫}\\[0.5cm] % Minor heading such as course title
+\textsc{\large email@wuyuchong.com}\\[0.5cm] % Minor heading such as course title
+\textsc{\large 指导老师：王成章}\\[0.5cm] % Minor heading such as course title
+\end{center}
+
+\end{minipage}\\[2cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large 2021年11月8日}\\[2cm] % Date, change the \today to a set date if you want to be precise
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+\tableofcontents
+
+\newpage
+
+\hypertarget{ux6458ux8981}{%
+\section{摘要}\label{ux6458ux8981}}
+
+我们使用 IMDB
+数据集进行文本分类。我们使用主题模型进行文本挖掘，之后进行情感分类。在文本预处理阶段，我们尝试使用词编码和词向量的方式，在训练阶段，我们构建了
+DNN、LSTM、BERT 等多个深度学习模型进行训练，并进行了模型比较，最终达到了
+90\% 的准确率。最后，为了进一步实现在超大文本集上进行训练，我们使用基于
+Spark 的分布式算法在集群服务器上进行训练测试。\footnote{分布式模型在该小型数据集上没有优势，进行此项的意义在于对大型文本数据集可拓展性的技术储备，仅有在文本量级超过单机可承载上限时，分布式计算才具备意义}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+模型 & 计算配置 & 用时 & 准确率 & 可拓展性 \\
+\midrule
+\endhead
+tokenize + DNN & 阿里云服务器 Xeon 8 核 CPU 32G 内存 & 10 分钟 & 60\% &
+低-单机 \\
+Word2Vec + LSTM & 阿里云服务器 Xeon 8 核 CPU 32G 内存 & 2 小时 & 80\% &
+低-单机 \\
+bert - 小型 & 阿里云服务器 Xeon 8 核 CPU 32G 内存 & 1 小时 & 90\% &
+低-单机 \\
+bert - AL & 阿里云服务器 Xeon 8 核 CPU 32G 内存 & 1.5小时 & 90\% &
+低-单机 \\
+bert - 标准 & 阿里云服务器 Xeon 8 核 CPU 32G 内存 & 3 小时 & 92\% &
+低-单机 \\
+spark & 中央财经大学大数据高性能分布式集群 & -- 分钟 & --\% & 高-集群 \\
+\bottomrule
+\end{longtable}
+
+\end{document}
